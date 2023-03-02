@@ -1,0 +1,633 @@
+1)
+Stucontroller.java--
+
+package com.example.demo.Controllers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.example.demo.Entity.Address;
+import com.example.demo.Service.Stuservice;
+
+public class Stucontroller {
+		@Autowired
+		private Stuservice Sserve;
+		@GetMapping("/show")
+		public List<Address> showStudent()
+		{
+			List<Address> a = new ArrayList<>();
+			a = Sserve.getStudent();
+			return a;
+		}
+}
+
+Address.java--
+
+package com.example.demo.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+@Entity
+@Table(name="Students")
+public class Address {
+	@Id
+    @Column(name="ID")
+    private int id;
+    
+    @Column(name="name")
+	private String employeeName;
+    @Column(name="address")
+	private String Address;
+    @Column(name="pincode")
+	private int pincode;
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getAddress() {
+		return Address;
+	}
+
+	public void setAddress(String address) {
+		Address = address;
+	}
+
+	public int getPincode() {
+		return pincode;
+	}
+
+	public void setPincode(int pincode) {
+		this.pincode = pincode;
+	}
+    public Address() {}
+	public Address(String employeeName, String address, int pincode) {
+		super();
+		this.employeeName = employeeName;
+		Address = address;
+		this.pincode = pincode;
+	}
+}
+
+Sturepo.java--
+
+package com.example.demo.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.Entity.Address;
+
+public interface Sturepo extends JpaRepository<Address,Integer> {
+
+}
+
+Stuservice.java--
+
+package com.example.demo.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.Entity.Address;
+import com.example.demo.Repository.Sturepo;
+
+public class Stuservice {
+	@Autowired
+	private Sturepo repo;
+	public List<Address> getStudent() {
+		List<Address> arr=new ArrayList<>();
+		arr=repo.findAll();
+		return arr;
+	}
+
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2)
+
+Controller.java--
+
+package com.example.demo.Controllers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.Entity.Family;
+import com.example.demo.Service.SService;
+
+
+@RestController
+public class Controller {
+	@Autowired
+	private SService Sserve;
+	
+	@PostMapping("/add")
+	public Family postdetails(@RequestBody Family obj)
+	{
+		return Sserve.adddet(obj);
+	}
+	@GetMapping("/show")
+	public List<Family> showdetails()
+	{
+		List<Family> a = new ArrayList<>();
+		a = Sserve.getdet();
+		return a;
+	}
+	@DeleteMapping("/delete/{id}")
+	public String delete(@PathVariable int id) {
+		Sserve.delete(id);
+		return "success";
+	}
+	@PutMapping("update/{id}")
+	public Family update(@PathVariable int id,@RequestBody Family obj){
+		return Sserve.update(id, obj);
+	}
+}
+
+Family.java--
+
+package com.example.demo.Entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="family")
+public class Family {
+	@Id
+    @Column(name="ID")
+    private int id;
+    
+    @Column(name="NAME")
+    private String name;
+    
+    @Column(name="DNAME")
+    private String deptname;
+    
+    @Column(name="section")
+    private String sec;
+    
+    @Column(name="mob")
+    private long mobile;
+    
+    @Column(name="mail")
+    private String email;
+    
+    @Column(name="addr")
+    private String address;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDeptname() {
+		return deptname;
+	}
+
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
+	}
+
+	public String getSec() {
+		return sec;
+	}
+
+	public void setSec(String sec) {
+		this.sec = sec;
+	}
+
+	public long getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(long mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+    public Family() {}
+	public Family(int id, String name, String deptname, String sec, long mobile, String email, String address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.deptname = deptname;
+		this.sec = sec;
+		this.mobile = mobile;
+		this.email = email;
+		this.address = address;
+	}
+    
+    
+}
+
+repo.java--
+
+package com.example.demo.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.Entity.Family;
+
+public interface repo extends JpaRepository<Family,Integer> {
+
+}
+
+SService.java--
+
+package com.example.demo.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.Entity.Family;
+import com.example.demo.Repository.repo;
+
+public class SService  {
+
+	@Autowired
+	private repo rep;
+	
+	public Family adddet(Family obj)
+	{
+		return rep.save(obj);
+	}
+	
+	public List<Family> getdet()
+	{
+		List<Family> arr=new ArrayList<>();
+		arr=rep.findAll();
+		return arr;
+	}
+	public String delete(int id) {
+		rep.deleteById(id);
+		return "sucess";
+	}
+	public Family update(int id,Family obj)
+	{
+	 return rep.saveAndFlush(obj);	
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3)
+
+Controllers.java--
+
+package com.example.demo.Controllers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.example.demo.Entity.Family;
+import com.example.demo.Service.getdetails;
+
+
+public class Controllers {
+	@Autowired
+	private getdetails Sserve;
+	@GetMapping("/show")
+	public List<Family> showdetails()
+	{
+		List<Family> a = new ArrayList<>();
+		a = Sserve.getdet();
+		return a;
+	}
+}
+
+Family.java--
+
+package com.example.demo.Entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="Students")
+public class Family {
+	@Id
+    @Column(name="ID")
+    private transient int id;
+    
+    @Column(name="name")
+	private String Name;
+    @Column(name="age")
+	private int Age;
+    @Column(name="relation")
+	private String Relation;
+	public String getName() {
+		return Name;
+	}
+	public void setEmployeeName(String Name) {
+		this.Name = Name;
+	}
+	public int getAge() {
+		return Age;
+	}
+	public void setAge(int age) {
+		Age = age;
+	}
+	public String getRelation() {
+		return Relation;
+	}
+	public void setRelation(String relation) {
+		Relation = relation;
+	}
+	public Family() {}
+	public Family(String Name, int age, String relation) {
+		super();
+		this.Name = Name;
+		Age = age;
+		Relation = relation;
+	}
+	
+}
+
+repo.java--
+
+package com.example.demo.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.Entity.Family;
+
+public interface repo extends JpaRepository<Family,Integer>{
+
+}
+
+getdetails.java--
+
+package com.example.demo.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.Entity.Family;
+import com.example.demo.Repository.repo;
+
+public class getdetails {
+	@Autowired
+	private repo rep;
+	public List<Family> getFamilydetails() {
+		List<Family> arr=new ArrayList<>();
+		arr=rep.findAll();
+		return arr;
+	}
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4)
+
+Apicontroller.java--
+
+package com.example.demo;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class Apicontroller {
+	@RequestMapping(value="/name/{name}",method=RequestMethod.GET)
+	public String getName(@PathVariable String name)
+	{
+		return "hi "+name;
+	}
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5)
+
+Controller.java--
+
+package com.example.demo.Controllers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.Entity.Student;
+import com.example.demo.Service.Stuservice;
+
+
+
+@RestController
+public class Controller {
+	@Autowired
+	private Stuservice Sserve;
+	
+	@PostMapping("/add")
+	public Student postdetails(@RequestBody Student obj)
+	{
+		return Sserve.adddet(obj);
+	}
+	@GetMapping("/show")
+	public List<Student> showdetails()
+	{
+		List<Student> a = new ArrayList<>();
+		a = Sserve.getdet();
+		return a;
+	}
+}
+
+Student.java--
+
+package com.example.demo.Entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="family")
+public class Student {
+	@Id
+    @Column(name="ID")
+    private int id;
+    
+    @Column(name="NAME")
+    private String name;
+    
+    @Column(name="DNAME")
+    private String deptname;
+    
+    @Column(name="section")
+    private String sec;
+    
+    @Column(name="mob")
+    private long mobile;
+    
+    @Column(name="mail")
+    private String email;
+    
+    @Column(name="addr")
+    private String address;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDeptname() {
+		return deptname;
+	}
+
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
+	}
+
+	public String getSec() {
+		return sec;
+	}
+
+	public void setSec(String sec) {
+		this.sec = sec;
+	}
+
+	public long getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(long mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+    public Student() {}
+	public Student(int id, String name, String deptname, String sec, long mobile, String email, String address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.deptname = deptname;
+		this.sec = sec;
+		this.mobile = mobile;
+		this.email = email;
+		this.address = address;
+	}
+    
+    
+}
+
+repo.java--
+
+package com.example.demo.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.Entity.Student;
+
+public interface repo extends JpaRepository<Student,Integer> {
+
+}
+
+Stuservice.java--
+
+package com.example.demo.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.Entity.Student;
+import com.example.demo.Repository.repo;
+
+public class Stuservice  {
+
+	@Autowired
+	private repo rep;
+	
+	public Student adddet(Student obj)
+	{
+		return rep.save(obj);
+	}
+	
+	public List<Student> getdet()
+	{
+		List<Student> arr=new ArrayList<>();
+		arr=rep.findAll();
+		return arr;
+	}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
